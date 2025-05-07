@@ -3,6 +3,7 @@
 # throughout this file
 # don'f forget to use "source venv/bin/activate" in terminal!
 import pygame
+import sys
 from constants import *
 from circleshape import *
 from player import *
@@ -20,9 +21,11 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable,)
+    Shot.containers = (shots, updatable, drawable)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
     while True:
@@ -31,6 +34,10 @@ def main():
                 return
         screen.fill("black")
         updatable.update(dt)
+        for asteroid in asteroids:
+            if player.collision(asteroid) == True:
+                print('Game over!')
+                sys.exit()
         for draws in drawable:
             draws.draw(screen)
         pygame.display.flip()
